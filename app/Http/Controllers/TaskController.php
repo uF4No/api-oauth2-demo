@@ -14,7 +14,7 @@ class TaskController extends Controller
   //To protect from non logged
   public function __construct()
   {
-      $this->middleware('auth', ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']]);
+      $this->middleware('auth', ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy', 'complete']]);
   }
   /**
      * Display a listing of the resource.
@@ -24,8 +24,10 @@ class TaskController extends Controller
     public function index()
     {
         //
-        $tasks = Task::all();
-        return view ('tasks.index', ['tasks' => $tasks]);
+        $user = Auth::user();
+        $tasks_completed = $user->tasks()->completed()->get();
+        $tasks_pending = $user->tasks()->pending()->get();
+        return view ('tasks.index', ['tasks_completed' => $tasks_completed, 'tasks_pending' => $tasks_pending]);
     }
 
     /**
@@ -48,16 +50,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //create new task
         $task = new Task;
+        //associate values from the view form
         $task->name = $request->name;
         $task->description = $request->description;
         $task->completed = false;
-        //link with user
+        //retrieve logged user
         $user = Auth::user();
+        //associate user to the new task to fill the user_id column in table
         $task->user()->associate($user);
-
+        //save task in database and redirect
         $task->save();
+
         return redirect()->route('tasks.index');
     }
 
@@ -120,6 +125,16 @@ class TaskController extends Controller
         //
         $task = Task::findOrFail($id);
         $task->delete();
+        return redirect()->route('tasks.index');
+    }
+
+    public function complete($id)
+    {
+        //
+        $task = Task::findOrFail($id);
+
+        $task->completed = true;
+        $task->save();
         return redirect()->route('tasks.index');
     }
 }
