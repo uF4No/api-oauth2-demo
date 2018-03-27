@@ -83,6 +83,7 @@
                 </div>
 
                 <div class="links">
+                    <a href="{{route('tasks.index')}}">Tasks list</a>
                     <a href="https://github.com/uF4No/api-oauth2-demo">GIT Repo</a>
                     <a href="http://www.uf4no.com">A. Ufano website</a>
                 </div>

@@ -23,7 +23,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        //returns the completed and pending tasks of the logged user
         $user = Auth::user();
         $tasks_completed = $user->tasks()->completed()->get();
         $tasks_pending = $user->tasks()->pending()->get();

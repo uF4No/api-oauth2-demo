@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+Route::post('/login', 'Auth\ApiLoginController@login');
+Route::post('/logout', 'Auth\ApiLoginController@logout');
+
+Route::get('/tasks', 'Api\TaskController@index')->name('api.tasks');
+Route::post('/tasks', 'Api\TaskController@store')->name('api.tasks.store');
+Route::post('/tasks/{id}/complete', 'Api\TaskController@complete')->name('api.tasks.complete');

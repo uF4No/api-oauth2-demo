@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTasksTable extends Migration
+class AddApiTokenToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
-          $table->increments('id');
-          $table->string('name');
-          $table->text('description');
-          $table->boolean('completed');
-          $table->integer('user_id');
-          $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            //add a 60char api_token
+            $table->string('api_token', 60)->unique()->nullable();
         });
     }
 
@@ -30,6 +26,8 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }
